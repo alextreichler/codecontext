@@ -56,6 +56,17 @@ We benchmarked `codecontext` on a medium-sized sample repository (50 files, 5,00
 
 **The Result:** You can give an AI a "perfect" understanding of a 50-file system using less than 2,000 tokens—roughly the same cost as a single medium-sized email.
 
+## Comparison with Other Tools
+
+While tools like **Repomix** are excellent for full-repository bundling, `codecontext` is optimized for **surgical research** and **extreme token density**:
+
+| Feature | Repomix (XML) | CodeContext | Why it matters |
+| :--- | :--- | :--- | :--- |
+| **Metadata Overhead** | ~15-20 KB (Header/Tree) | **< 1 KB** | Every byte saved is a byte used for reasoning. |
+| **Compression** | ~23% (Tree-sitter) | **~85% (Skeleton)** | `skeleton` mode only keeps the "API Surface" (Structs/Signatures). |
+| **Output Format** | High-Verbositiy XML | **Ultra-Compact XML** | Optimized for model attention and parsing speed. |
+| **Concurrency** | Single-threaded | **Worker Pool (Multi-threaded)** | Significantly faster on large codebases. |
+
 ## Installation
 
 ```bash
