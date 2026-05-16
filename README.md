@@ -1,5 +1,7 @@
 # CodeContext 🚀
 
+**Note: This tool is designed for AI agents, not human readability.** It generates structured, high-density context that allows LLMs to understand codebases while minimizing token waste.
+
 `codecontext` is a high-performance CLI tool designed to pack local repositories into an **agent-friendly XML format**. It maximizes "value per token" by providing surgical tools to explore codebases without overwhelming LLM context windows.
 
 ## Why use this?
@@ -10,6 +12,28 @@ Standard concatenation tools (like `cat`) or raw `grep` often provide too much o
 - **Surgical Extraction:** Grab specific line ranges to minimize context bloat.
 - **Concurrent Processing:** Built in Go with a worker pool for ultra-fast bundling.
 - **LLM-Optimized XML:** Uses `<f p="...">` tags which are highly reliable for model parsing.
+
+## Ecosystem Integration
+
+To give your AI agent "superpowers," add `codecontext` to its configuration:
+
+### 1. Gemini CLI
+Add this to your global `~/.gemini/GEMINI.md` or local `GEMINI.md`:
+```markdown
+- Always prefer using the `codecontext` CLI tool for codebase research, indexing, and gathering context.
+```
+
+### 2. Cline / Roo Code / Claude Dev
+Add this to your `.claudecustominstructions`:
+```text
+Use `codecontext index .` to map the project before reading files.
+Use `codecontext skeleton <path>` to see data structures.
+```
+
+### 3. Custom Agents / MCP
+If you are building a custom agent, you can wrap `codecontext` as a tool:
+- **Input:** Search query or file path.
+- **Output:** The XML-wrapped response from `codecontext`.
 
 ## Installation
 
