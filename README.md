@@ -35,6 +35,15 @@ If you are building a custom agent, you can wrap `codecontext` as a tool:
 - **Input:** Search query or file path.
 - **Output:** The XML-wrapped response from `codecontext`.
 
+## Use Case: Debugging & Troubleshooting
+
+`codecontext` is exceptionally powerful when you need an AI to help diagnose an issue in a **running system**:
+
+1.  **Map the Flow:** Start with `codecontext index .` to let the AI see the entire project's entry points and handlers.
+2.  **Inspect State:** Use `codecontext skeleton` on the models or state-management files to help the AI understand how data is structured and where it might be corrupted.
+3.  **Trace Errors:** If you have a stack trace, give it to the AI and have it use `codecontext extract` to look at the exact line ranges mentioned in the trace without the noise of the rest of the file.
+4.  **Identify Side Effects:** Use `codecontext search` for specific environment variables or database keys to find every place the system interacts with external state.
+
 ## Installation
 
 ```bash
