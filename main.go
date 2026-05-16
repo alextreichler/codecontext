@@ -113,7 +113,7 @@ func main() {
 			path = "."
 		}
 		if query == "" {
-			fmt.Println("Usage: codetoagent search <query> [path]")
+			fmt.Println("Usage: codecontext search <query> [path]")
 			return
 		}
 		runSearch(query, path, &config)
@@ -124,8 +124,8 @@ func main() {
 			rng = filteredArgs[0]
 		}
 		if target == "." || target == "" {
-			fmt.Println("Usage: codetoagent extract <file> [range]")
-			fmt.Println("Example: codetoagent extract main.go 10:20")
+			fmt.Println("Usage: codecontext extract <file> [range]")
+			fmt.Println("Example: codecontext extract main.go 10:20")
 			return
 		}
 		runExtract(target, rng, &config)
@@ -141,8 +141,8 @@ func main() {
 }
 
 func printUsage() {
-	fmt.Fprintf(os.Stderr, "codetoagent - Context-Efficient Repository Packing for AI Agents\n\n")
-	fmt.Fprintf(os.Stderr, "USAGE:\n  codetoagent <command> [path] [options]\n\n")
+	fmt.Fprintf(os.Stderr, "codecontext - Context-Efficient Repository Packing for AI Agents\n\n")
+	fmt.Fprintf(os.Stderr, "USAGE:\n  codecontext <command> [path] [options]\n\n")
 	fmt.Fprintf(os.Stderr, "COMMANDS:\n")
 	fmt.Fprintf(os.Stderr, "  index     Generate a compact symbol map of the project. Use this FIRST to find symbols.\n")
 	fmt.Fprintf(os.Stderr, "  skeleton  Pack only function/type signatures + doc-comments into XML. Use to see APIs.\n")

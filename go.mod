@@ -1,4 +1,4 @@
-module github.com/alextreichler/codetoagent
+module github.com/alextreichler/codecontext
 
 go 1.25.0
 

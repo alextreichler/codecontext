@@ -1,10 +1,10 @@
-# codeToAgent 🚀
+# CodeContext 🚀
 
-`codetoagent` is a high-performance CLI tool designed to pack local repositories into an **agent-friendly XML format**. It maximizes "value per token" by providing surgical tools to explore codebases without overwhelming LLM context windows.
+`codecontext` is a high-performance CLI tool designed to pack local repositories into an **agent-friendly XML format**. It maximizes "value per token" by providing surgical tools to explore codebases without overwhelming LLM context windows.
 
 ## Why use this?
 
-Standard concatenation tools (like `cat`) or raw `grep` often provide too much or too little information. `codetoagent` provides a middle ground:
+Standard concatenation tools (like `cat`) or raw `grep` often provide too much or too little information. `codecontext` provides a middle ground:
 
 - **Contextual Skeleton:** See struct fields and interface methods without implementation noise.
 - **Surgical Extraction:** Grab specific line ranges to minimize context bloat.
@@ -14,7 +14,7 @@ Standard concatenation tools (like `cat`) or raw `grep` often provide too much o
 ## Installation
 
 ```bash
-go install github.com/alextreichler/codetoagent@latest
+go install github.com/alextreichler/codecontext@latest
 ```
 
 ## Commands
@@ -40,6 +40,7 @@ go install github.com/alextreichler/codetoagent@latest
 2.  **Understand:** Use `skeleton` on relevant directories to see the "shape" of the code.
 3.  **Read:** Use `bundle` or `extract` only on the specific files you need to modify.
 4.  **Verify:** Use `search` to ensure your changes don't break dependencies elsewhere.
+
 
 ## License
 
