@@ -1,103 +1,69 @@
-# CodeContext 🚀
+# CodeContext
 
-**Note: This tool is designed for AI agents, not human readability.** It generates structured, high-density context that allows LLMs to understand codebases while minimizing token waste.
+Machine-optimized repository packing for LLM context windows.
 
-`codecontext` is a high-performance CLI tool designed to pack local repositories into an **agent-friendly XML format**. It maximizes "value per token" by providing surgical tools to explore codebases without overwhelming LLM context windows.
+## Overview
+`codecontext` is a high-performance CLI utility that aggregates local source code into a structured XML format. It is designed for machine consumption, prioritizing token density and structural clarity over human readability.
 
-## Why use this?
+### Core Features
+- **Structural Pruning:** `skeleton` mode extracts data structures and signatures while omitting implementation logic.
+- **Surgical Extraction:** Target specific line ranges to minimize context bloat.
+- **High-Throughput Aggregation:** Concurrent file processing via Go worker pools.
+- **Deterministic XML:** Wraps files in `<f p="...">` tags for reliable model parsing.
 
-Standard concatenation tools (like `cat`) or raw `grep` often provide too much or too little information. `codecontext` provides a middle ground:
+## Commands
 
-- **Contextual Skeleton:** See struct fields and interface methods without implementation noise.
-- **Surgical Extraction:** Grab specific line ranges to minimize context bloat.
-- **Concurrent Processing:** Built in Go with a worker pool for ultra-fast bundling.
-- **LLM-Optimized XML:** Uses `<f p="...">` tags which are highly reliable for model parsing.
+| Command | Description |
+| :--- | :--- |
+| `index` | Generates a symbol map with line numbers and signatures. |
+| `tree` | Renders a directory structure visualization. |
+| `skeleton` | Extracts type/struct bodies and doc comments. |
+| `bundle` | Aggregates full file contents into XML. |
+| `extract` | Retrieves a specific line range (e.g., `main.go 10:20`). |
+| `search` | Concurrent grep with XML aggregation. |
+
+## Configuration Options
+- `--lines`: Prefixes output with line numbers.
+- `--max-tokens <n>`: Truncates output at N tokens (default: 1M).
+- `--verbose`: Includes character counts and processing metadata.
+
+## Benchmarks
+Results based on a 50-file, 5,000-line sample repository:
+
+| Method | Size | Est. Tokens | Data Reduction |
+| :--- | :--- | :--- | :--- |
+| **Full Bundle** | 45.0 KB | ~11,250 | 0% |
+| **Skeleton** | 7.5 KB | ~1,875 | 84% |
+| **Index** | 2.8 KB | ~700 | 94% |
+
+## Comparison: CodeContext vs Repomix
+Benchmarks against Repomix (XML mode) on identical source material:
+
+| Feature | Repomix (XML) | CodeContext |
+| :--- | :--- | :--- |
+| **Metadata Overhead** | ~15-20 KB (Headers/Tree) | < 1 KB |
+| **Logic Compression** | ~23% (Tree-sitter) | ~85% (Skeleton) |
+| **Execution Model** | Single-threaded | Multi-threaded Worker Pool |
 
 ## Ecosystem Integration
 
-To give your AI agent "superpowers," add `codecontext` to its configuration:
-
-### 1. Gemini CLI
-Add this to your global `~/.gemini/GEMINI.md` or local `GEMINI.md`:
+### Gemini CLI
+Add to `GEMINI.md`:
 ```markdown
-- Always prefer using the `codecontext` CLI tool for codebase research, indexing, and gathering context.
+- Utilize `codecontext` for repository research and context gathering.
 ```
 
-### 2. Cline / Roo Code / Claude Dev
-Add this to your `.claudecustominstructions`:
+### Cline / Roo Code / Claude Dev
+Add to `.claudecustominstructions`:
 ```text
-Use `codecontext index .` to map the project before reading files.
-Use `codecontext skeleton <path>` to see data structures.
+Use `codecontext index .` for initial mapping.
+Use `codecontext skeleton <path>` for structural analysis.
 ```
-
-### 3. Custom Agents / MCP
-If you are building a custom agent, you can wrap `codecontext` as a tool:
-- **Input:** Search query or file path.
-- **Output:** The XML-wrapped response from `codecontext`.
-
-## Use Case: Debugging & Troubleshooting
-
-`codecontext` is exceptionally powerful when you need an AI to help diagnose an issue in a **running system**:
-
-1.  **Map the Flow:** Start with `codecontext index .` to let the AI see the entire project's entry points and handlers.
-2.  **Inspect State:** Use `codecontext skeleton` on the models or state-management files to help the AI understand how data is structured and where it might be corrupted.
-3.  **Trace Errors:** If you have a stack trace, give it to the AI and have it use `codecontext extract` to look at the exact line ranges mentioned in the trace without the noise of the rest of the file.
-4.  **Identify Side Effects:** Use `codecontext search` for specific environment variables or database keys to find every place the system interacts with external state.
-
-## Real-World Performance
-
-We benchmarked `codecontext` on a medium-sized sample repository (50 files, 5,000 lines of code) to compare how much context is sent to the AI:
-
-| Method | Size | Est. Tokens | Token Savings | Use Case |
-| :--- | :--- | :--- | :--- | :--- |
-| **Full Bundle** | 45.0 KB | ~11,250 | 0% | Deep refactoring or debugging. |
-| **Skeleton** | **7.5 KB** | **~1,875** | **84%** | **Architectural review / API mapping.** |
-| **Index** | **2.8 KB** | **~700** | **94%** | **Initial discovery / Finding symbols.** |
-
-**The Result:** You can give an AI a "perfect" understanding of a 50-file system using less than 2,000 tokens—roughly the same cost as a single medium-sized email.
-
-## Comparison with Other Tools
-
-While tools like **Repomix** are excellent for full-repository bundling, `codecontext` is optimized for **surgical research** and **extreme token density**:
-
-| Feature | Repomix (XML) | CodeContext | Why it matters |
-| :--- | :--- | :--- | :--- |
-| **Metadata Overhead** | ~15-20 KB (Header/Tree) | **< 1 KB** | Every byte saved is a byte used for reasoning. |
-| **Compression** | ~23% (Tree-sitter) | **~85% (Skeleton)** | `skeleton` mode only keeps the "API Surface" (Structs/Signatures). |
-| **Output Format** | High-Verbositiy XML | **Ultra-Compact XML** | Optimized for model attention and parsing speed. |
-| **Concurrency** | Single-threaded | **Worker Pool (Multi-threaded)** | Significantly faster on large codebases. |
 
 ## Installation
-
 ```bash
 go install github.com/alextreichler/codecontext@latest
 ```
 
-## Commands
-
-| Command | Description | Best For... |
-| :--- | :--- | :--- |
-| **`index`** | Compact symbol map (lines numbers + signatures). | Initial discovery. |
-| **`tree`** | Visual directory structure. | Understanding layout. |
-| **`skeleton`** | Type/Struct bodies + doc comments. | Understanding APIs/Contracts. |
-| **`bundle`** | Full file contents in XML. | Refactoring or debugging. |
-| **`extract`** | Specific line range (e.g., `main.go 10:20`). | Surgical edits. |
-| **`search`** | Concurrent grep + XML bundling. | Finding logic across modules. |
-
-## Options
-
-- `--lines`: Prefix each line with its line number (essential for editing).
-- `--max-tokens <n>`: Safety limit to prevent context overflows (default 1M).
-- `--verbose`: Include character/token estimates and mode metadata.
-
-## Agent Best Practices
-
-1.  **Discover:** Start with `tree` or `index`.
-2.  **Understand:** Use `skeleton` on relevant directories to see the "shape" of the code.
-3.  **Read:** Use `bundle` or `extract` only on the specific files you need to modify.
-4.  **Verify:** Use `search` to ensure your changes don't break dependencies elsewhere.
-
-
 ## License
-
 MIT
